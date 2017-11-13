@@ -12,21 +12,33 @@ import br.com.jj.campanha.commons.Validator;
 import br.com.jj.campanha.constants.ConstMessages;
 import br.com.jj.campanha.models.Campanha;
 import br.com.jj.campanha.models.Error;
+import br.com.jj.campanha.repositories.impl.DefaultCampanhaRepository;
+import br.com.jj.campanha.services.CampanhaService;
+import br.com.jj.campanha.services.impl.DefaultCampanhaService;
 
 @Path("/campanha")
 public class CampanhaHandler {
+	
+	private CampanhaService service;
+	
+	public CampanhaHandler() {
+		this.service = new DefaultCampanhaService(new DefaultCampanhaRepository());
+	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getMsg(Campanha campanha) {
+	public Response getMsg(String json) {
 
 		try {
+			
+			Campanha campanha = new Campanha().createFromJSON(json, Campanha.class);
 
 			if (Boolean.FALSE.equals(Validator.isCampanhaEmptyOrNull(campanha))) {
 
 				if (Validator.isCampanhaValid(campanha)) {
 
+					service.include(campanha);
 					
 					return Response.status(Status.OK.getStatusCode()).entity(campanha).build();
 				}
@@ -36,7 +48,7 @@ public class CampanhaHandler {
 			return Response.status(Status.BAD_REQUEST.getStatusCode()).entity(new Error(ConstMessages.CAMPANHA_NAO_INFORMADA).toJSON()).build();
 
 		} catch (Exception e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(e.getCause().getMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(new Error(e.getMessage()).toJSON()).build();
 		}
 
 	}

@@ -11,7 +11,7 @@ public class ConstMessages {
 
 	public static final String DATA_VIG_CAMPANHA_NAO_INFORMADA = "Data de vigência da campanha não informada!";
 	
-	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
+	public static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy";
 
 	private ConstMessages() {
 		// private constructor to hide the public one

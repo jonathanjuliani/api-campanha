@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import br.com.jj.campanha.constants.ConstMessages;
+import javassist.Modifier;
 
 public interface JsonConvertable <T> {
 	
@@ -13,7 +14,9 @@ public interface JsonConvertable <T> {
     }
 	
 	public default T createFromJSON(String json, Class<T> dtoClass) {
-        Gson gson = new GsonBuilder().setDateFormat(ConstMessages.DATE_FORMAT_DD_MM_YYYY).create();
+        Gson gson = new GsonBuilder()
+        		.excludeFieldsWithModifiers(Modifier.TRANSIENT)
+				.setDateFormat(ConstMessages.DATE_FORMAT_DD_MM_YYYY).create();
         return gson.fromJson(json, dtoClass);
     }
 }
